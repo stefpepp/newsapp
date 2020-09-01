@@ -1,11 +1,19 @@
 import React from "react";
 import "./App.css";
+import { Route } from "react-router-dom";
+import TopNews from "./components/topNews/TopNews";
+import Categories from "./components/categories/Categories";
+import Search from "./components/search/Search";
+import Header from "./components/common/Header";
 
-function App() {
+const App = () => {
   return (
     <div className="App">
-      <h1>Newsapp</h1>
+      <Header />
+      <Route exact path="/" component={TopNews} />
+      <Route path="/categories" component={Categories} />
+      <Route path="/search" component={Search} />
     </div>
   );
-}
+};
 export default App;
