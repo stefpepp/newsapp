@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import * as commonUrls from "../../commonUrls";
 import Article from "./Article";
+import * as countryActions from "../../redux/actions/countryActions";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-const TopNews = () => {
+const TopNews = ({ country, chooseCountry }) => {
   const [topNews, setTopNews] = useState([]);
 
   useEffect(() => {
-    console.log("USE EFFECT!!!!");
     if (!topNews.length > 0) {
       getArticles();
     }
@@ -24,10 +26,25 @@ const TopNews = () => {
   return (
     <>
       {topNews.map((article) => {
-        return <Article key={article.publishedAt} article={article} />;
+        const key = article.title.slice(0, 20);
+        return <Article key={key} article={article} />;
       })}
     </>
   );
 };
 
-export default TopNews;
+TopNews.propTypes = {
+  country: PropTypes.object.isRequired,
+};
+
+function mapStateToProps(state) {
+  return {
+    country: { ...state.country, shortName: state.country.shortName },
+  };
+}
+
+const mapDispatchToProps = {
+  chooseCountry: countryActions.chooseCountry,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopNews);
