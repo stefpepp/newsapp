@@ -9,24 +9,27 @@ import * as countryTypes from "../../countryTypes";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-const TopNews = ({ country, storeArticles }) => {
+const TopNews = ({ country, storeArticles, searchText }) => {
   const [topNews, setTopNews] = useState([]);
+  const [choosenCountry, setChoosenCountry] = useState([]);
   const [errors, setErrors] = useState();
 
   useEffect(() => {
     const newsLength = topNews.length;
-    if (!newsLength || !newsLength > 0) {
+    if (
+      !newsLength ||
+      !newsLength > 0 ||
+      country.shortName !== choosenCountry
+    ) {
       getArticles();
     }
-  }, [country, errors]);
+  }, [country, errors, searchText]);
 
   const getArticles = async () => {
-    console.log(country.shortName);
     const url =
       country.shortName === countryTypes.GB
         ? commonUrls.TOP_NEWS_GB_URL
         : commonUrls.TOP_NEWS_US_URL;
-    console.log(url);
     const response = await axios.get(url).catch((error) => {
       setErrors("Error on network");
     });
@@ -35,9 +38,12 @@ const TopNews = ({ country, storeArticles }) => {
       response.statusText === "OK" &&
       response.data.articles.length > 0
     ) {
-      const { articles } = response.data;
+      const { articles } = searchText
+        ? response.data.articles.map((a) => a.content.contains(searchText))
+        : response.data;
       setTopNews(articles);
       storeArticles(articles);
+      setChoosenCountry(country.shortName);
     }
   };
 
@@ -47,12 +53,12 @@ const TopNews = ({ country, storeArticles }) => {
         <h1>{errors}</h1>
       ) : (
         <>
-          <div className={style.content_description}>
+          <div className={style.content_header}>
             <h2>Top news from Great Britain:</h2>
           </div>
           <div className={style.headlines}>
             {topNews.map((article) => {
-              const key = article.title.slice(0, 20);
+              const key = article.url;
               return <Headline key={key} article={article} />;
             })}
           </div>

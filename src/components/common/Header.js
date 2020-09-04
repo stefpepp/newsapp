@@ -23,7 +23,7 @@ const Header = ({ country, chooseCountry }) => {
 
   const activeStyleCountry = (countryType) => {
     if (country.shortName === countryType) {
-      return { color: "black", background: "#e8e8e8", outline: "none" }; //store's country mathces button in the header -> change style of the button
+      return { color: "black", background: "#b9c9e2", outline: "none" }; //store's country mathces button in the header -> change style of the button
     }
   };
 
