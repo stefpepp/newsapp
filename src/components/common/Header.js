@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
+import style from "../../style.module.scss";
 import * as countryActions from "../../redux/actions/countryActions";
 import * as countryTypes from "../../countryTypes";
 import PropTypes from "prop-types";
+import HeaderItem from "./HeaderItem";
 
 const Header = ({ country, chooseCountry }) => {
   const [choosenCountry, setChoosenCountry] = useState();
-  const activeStyle = { color: "#F15B2A" };
+  const activeStyle = { textDecoration: "underline" };
 
   useEffect(() => {
     if (!choosenCountry) {
@@ -22,32 +23,47 @@ const Header = ({ country, chooseCountry }) => {
 
   const activeStyleCountry = (countryType) => {
     if (country.shortName === countryType) {
-      return { color: "#F15B2A" }; //store's country mathces button in the header -> change style of the button
+      return { color: "black", background: "#e8e8e8", outline: "none" }; //store's country mathces button in the header -> change style of the button
     }
   };
 
   return (
-    <nav>
-      <NavLink to="/" exact activeStyle={activeStyle}>
-        Top News |
-      </NavLink>
-      <NavLink to="/categories" activeStyle={activeStyle}>
-        Categories |
-      </NavLink>
-      <NavLink to="/search" activeStyle={activeStyle}>
-        Search
-      </NavLink>
-      {countryTypes.types.map((t) => (
-        <button
-          key={t}
-          value={t}
-          onClick={handleChooseCountry}
-          style={activeStyleCountry(t)}
-        >
-          {t}
-        </button>
-      ))}
-    </nav>
+    <div className={style.header}>
+      <nav>
+        <div className={style.header_first_section}>
+          <HeaderItem
+            path="/"
+            className={style.header_item}
+            activeStyle={activeStyle}
+            name="Top News"
+          />
+          <HeaderItem
+            path="/categories"
+            className={style.header_item}
+            activeStyle={activeStyle}
+            name="Categories"
+          />
+          <HeaderItem
+            path="/search"
+            className={style.header_item}
+            activeStyle={activeStyle}
+            name="Search"
+          />
+        </div>
+        <div className={style.header_second_section}>
+          {countryTypes.types.map((t) => (
+            <button
+              key={t}
+              value={t}
+              onClick={handleChooseCountry}
+              style={activeStyleCountry(t)}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      </nav>
+    </div>
   );
 };
 

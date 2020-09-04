@@ -1,8 +1,11 @@
 import React from "react";
+import style from "../../style.module.scss";
 
 const Search = () => (
   <>
-    <h1>Search</h1>
+    <div className={style.content_description}>
+      <h2>Search top news from Great Britain by term:</h2>
+    </div>
   </>
 );
 
