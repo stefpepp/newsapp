@@ -3,12 +3,21 @@ import { connect } from "react-redux";
 import style from "../../style.module.scss";
 import * as countryActions from "../../redux/actions/countryActions";
 import * as countryTypes from "../../countryTypes";
+import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import HeaderItem from "./HeaderItem";
 
 const Header = ({ country, chooseCountry }) => {
+  const location = useLocation();
   const [choosenCountry, setChoosenCountry] = useState();
+  const [countryEnabled, setCountryEnabled] = useState(true);
   const activeStyle = { textDecoration: "underline" };
+
+  useEffect(() => {
+    if (location.pathname.includes("/article")) {
+      setCountryEnabled(false);
+    } else setCountryEnabled(true);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!choosenCountry) {
@@ -53,6 +62,7 @@ const Header = ({ country, chooseCountry }) => {
         <div className={style.header_second_section}>
           {countryTypes.types.map((t) => (
             <button
+              disabled={!countryEnabled}
               key={t}
               value={t}
               onClick={handleChooseCountry}

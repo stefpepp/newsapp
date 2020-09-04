@@ -51,6 +51,11 @@
           border: 0.5px solid #0061aa;
           cursor: pointer;
         }
+
+        button:disabled {
+          background: rgb(112, 112, 112) !important;
+          cursor: not-allowed;
+        }
       }
     }
   }
