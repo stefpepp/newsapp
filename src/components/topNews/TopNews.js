@@ -21,15 +21,15 @@ const TopNews = ({ country, storeArticles, searchText }) => {
       !newsLength > 0 ||
       country.shortName !== choosenCountry
     ) {
-      getArticles();
+      const url =
+        country.shortName === countryTypes.GB
+          ? commonUrls.TOP_NEWS_GB_URL
+          : commonUrls.TOP_NEWS_US_URL;
+      findArticles(url + "&" + commonUrls.API_KEY_PARAM);
     }
-  }, [country, errors, searchText]);
+  }, [country, errors, searchText, choosenCountry]);
 
-  const getArticles = async () => {
-    const url =
-      country.shortName === countryTypes.GB
-        ? commonUrls.TOP_NEWS_GB_URL
-        : commonUrls.TOP_NEWS_US_URL;
+  const findArticles = async (url) => {
     const response = await axios.get(url).catch((error) => {
       setErrors("Error on network");
     });
@@ -54,7 +54,7 @@ const TopNews = ({ country, storeArticles, searchText }) => {
       ) : (
         <>
           <div className={style.content_header}>
-            <h2>Top news from Great Britain:</h2>
+            <h2>Top news from {country.shortName}:</h2>
           </div>
           <div className={style.headlines}>
             {topNews.map((article) => {
